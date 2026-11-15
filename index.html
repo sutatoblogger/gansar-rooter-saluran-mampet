@@ -8,22 +8,12 @@
     
     <!-- ================= 1. META SEO TINGKAT DEWA ================= -->
     <title>Jasa Saluran Mampet & Pipa Bocor Mengwi Badung | GANSAR ROOTER</title>
-	<!-- TITAN SPEED PROTOCOL (LCP FIX & RENDER BLOCKING FIX) -->
-    <!-- Preload LCP Image -->
+	<!-- TITAN SPEED PROTOCOL (LCP FIX) -->
     <link rel="preload" as="image" href="assets/hero-gansar-rooter-bali.webp" fetchpriority="high">
-    
-    <!-- Preconnect ke sumber eksternal -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Asynchronous Font Loading untuk menghindari Render Blocking -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,800&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,800&display=swap">
-    </noscript>
     
     <meta name="description" content="Gansar Rooter: Jasa saluran mampet tanpa bongkar & deteksi pipa bocor profesional di Mengwi, Badung, Denpasar, Canggu. Fast response, teknisi berpengalaman.">
     <meta name="keywords" content="Jasa Saluran Mampet Badung, biaya perbaikan saluran, jasa terdekat, spesialis sedot wc, tukang panggilan, nomor wa, cara mengatasi, rekomendasi, tanpa bongkar, fast response, harga murah, terdekat, bergaransi, Mengwi, Badung, Denpasar, Canggu, Seminyak, Kuta, Abiansemal">
@@ -112,8 +102,11 @@
     }
     </script>
     
-    <!-- Tailwind CSS (Asynchronous Loading) -->
-    <script src="https://cdn.tailwindcss.com" async></script>
+    <!-- Font Premium: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -702,136 +695,121 @@
 
     <!-- ================= JAVASCRIPT MASTER ================= -->
     <script>
-        // Penundaan Eksekusi Non-Kritis (Lazy Execution)
+        // Menu Mobile Toggle
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        if(btn && menu) {
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('menu-open');
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // Menu Mobile Toggle
-            const btn = document.getElementById('menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            if(btn && menu) {
-                btn.addEventListener('click', () => {
-                    menu.classList.toggle('menu-open');
-                });
-            }
-
-            // Mencegah eksekusi berat sebelum user berinteraksi
-            let isInteractive = false;
-            
-            function initInteractiveFeatures() {
-                if (isInteractive) return;
-                isInteractive = true;
-                
-                // Pengiriman Form Web3Forms
-                const waForm = document.getElementById('waForm');
-                if(waForm) {
-                    waForm.addEventListener('submit', async function(event) {
-                        event.preventDefault();
-                        const targetedForm = event.target;
-                        const compiledFormData = new FormData(targetedForm);
-                        const statusMsg = document.getElementById('formStatusMsg');
-                        const submitBtn = document.getElementById('btnSubmitForm');
+            // Pengiriman Form Web3Forms
+            const waForm = document.getElementById('waForm');
+            if(waForm) {
+                waForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const targetedForm = event.target;
+                    const compiledFormData = new FormData(targetedForm);
+                    const statusMsg = document.getElementById('formStatusMsg');
+                    const submitBtn = document.getElementById('btnSubmitForm');
+                    
+                    submitBtn.innerText = "MENGIRIM DATA..."; submitBtn.disabled = true;
+                    try {
+                        await fetch('https://api.web3forms.com/submit', { method: 'POST', body: compiledFormData }); 
                         
-                        submitBtn.innerText = "MENGIRIM DATA..."; submitBtn.disabled = true;
-                        try {
-                            await fetch('https://api.web3forms.com/submit', { method: 'POST', body: compiledFormData }); 
-                            
-                            const rawJsonData = Object.fromEntries(compiledFormData.entries());
-                            const sheetUrl = 'https://script.google.com/macros/s/AKfycbxwB6z8BSSP_D86AUPDqDWT-tajBbCdsrgcyhT6LzG_KNDKh4BrLO9mOL_ZKIRPjXoD/exec'; 
-                            await fetch(sheetUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rawJsonData) });
-                            
-                            const waNumber = "628995354404"; 
-                            const waText = `Halo Admin GANSAR ROOTER,\n\n*Nama:* ${rawJsonData.name}\n*Nomor WA:* ${rawJsonData.whatsapp}\n*Kebutuhan:* ${rawJsonData.layanan}\n*Pesan/Keluhan:* ${rawJsonData.message}\n\nMohon info lengkap layanan dan jadwal teknisi..`;
-                            window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`, '_blank');
-                            
-                            statusMsg.style.display = "block"; 
-                            targetedForm.reset();
-                        } catch (e) {
-                            console.error("Gagal mengirim", e);
-                        } finally {
-                            submitBtn.innerText = "Panggil Teknisi Sekarang →"; submitBtn.disabled = false;
-                        }
-                    });
-                }
-
-                // Suara AI (Voice) - Ditunda hingga user mengklik
-                const voiceSynth = window.speechSynthesis;
-                document.querySelectorAll('.jarvis-voice-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        document.querySelectorAll('.jarvis-voice-btn').forEach(btn => btn.classList.remove('jarvis-playing'));
-                        if (voiceSynth.speaking) voiceSynth.cancel();
+                        const rawJsonData = Object.fromEntries(compiledFormData.entries());
+                        const sheetUrl = 'https://script.google.com/macros/s/AKfycbxwB6z8BSSP_D86AUPDqDWT-tajBbCdsrgcyhT6LzG_KNDKh4BrLO9mOL_ZKIRPjXoD/exec'; 
+                        await fetch(sheetUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rawJsonData) });
                         
-                        const messagePayload = button.getAttribute('data-text');
-                        const speechUtterance = new SpeechSynthesisUtterance(messagePayload);
-                        speechUtterance.lang = 'id-ID';
-                        speechUtterance.rate = 0.88;
-                        speechUtterance.pitch = 0.82;
+                        const waNumber = "628995354404"; 
+                        const waText = `Halo Admin GANSAR ROOTER,\n\n*Nama:* ${rawJsonData.name}\n*Nomor WA:* ${rawJsonData.whatsapp}\n*Kebutuhan:* ${rawJsonData.layanan}\n*Pesan/Keluhan:* ${rawJsonData.message}\n\nMohon info lengkap layanan dan jadwal teknisi..`;
+                        window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`, '_blank');
                         
-                        button.classList.add('jarvis-playing');
-                        speechUtterance.onend = () => button.classList.remove('jarvis-playing');
-                        speechUtterance.onerror = () => button.classList.remove('jarvis-playing');
-                        voiceSynth.speak(speechUtterance);
-                    });
-                });
-
-                // Logika Chatbot
-                const aiBtn = document.getElementById('jarvis-ai-button');
-                const chatBox = document.getElementById('jarvis-chat-box');
-                const closeBtn = document.getElementById('jarvis-close-ai');
-                const chatInput = document.getElementById('jarvis-chat-input');
-                const sendBtn = document.getElementById('jarvis-send-chat');
-                const chatHistory = document.getElementById('jarvis-chat-history');
-
-                if(aiBtn && chatBox) {
-                    aiBtn.addEventListener('click', () => { chatBox.style.display = chatBox.style.display === 'none' ? 'flex' : 'none'; });
-                    closeBtn.addEventListener('click', () => chatBox.style.display = 'none');
-
-                    function processAI() {
-                        const userText = chatInput.value.toLowerCase();
-                        if(!userText) return;
-
-                        chatHistory.innerHTML += `<div class="jarvis-msg-user">${chatInput.value.trim()}</div>`;
-                        chatInput.value = '';
-                        chatHistory.scrollTop = chatHistory.scrollHeight;
-                        
-                        const loadId = 'jarvis-load-' + Date.now();
-                        chatHistory.innerHTML += `<div id="${loadId}" class="jarvis-msg-ai jarvis-typing">AI sedang mengetik...</div>`;
-                        chatHistory.scrollTop = chatHistory.scrollHeight;
-                        
-                        setTimeout(() => {
-                            document.getElementById(loadId).remove();
-                            let reply = "";
-                            
-                            if (userText.match(/harga|biaya|tarif|berapa/)) {
-                                reply = `Biaya GANSAR ROOTER dijamin transparan dan terjangkau! Harga menyesuaikan tingkat keparahan mampet atau bocor di lapangan. Konsultasi gratis via WA ya.`;
-                            }
-                            else if (userText.match(/lokasi|daerah|area|jangkauan|dimana|bali|badung|denpasar/)) {
-                                reply = `Kami menjangkau radius 40km dari Mengwi, mencakup seluruh Badung, Denpasar, Canggu, Kuta, hingga Seminyak. Tim fast response siap meluncur!`;
-                            }
-                            else if (userText.match(/proses|bongkar|cara/)) {
-                                reply = `Pengerjaan kami menggunakan metode modern tanpa bongkar keramik! Kami pakai mesin rooter spiral untuk saluran mampet, jadi lebih aman, cepat, dan bersih.`;
-                            }
-                            else if (userText.match(/pesan|booking|order|panggil|wa|hubungi/)) {
-                                reply = `Siap meluncur menembus kemacetan Bali! Langsung saja klik tombol WhatsApp hijau atau hubungi teknisi kami di 0899-5354-404.`;
-                            }
-                            else {
-                                reply = `Halo! Saya asisten AI Gansar Rooter. Butuh bantuan untuk WC mampet, kitchen sink tersumbat, sedot WC, atau deteksi pipa bocor di area Bali?`;
-                            }
-                            
-                            chatHistory.innerHTML += `<div class="jarvis-msg-ai">${reply}</div>`;
-                            chatHistory.scrollTop = chatHistory.scrollHeight;
-                        }, 800);
+                        statusMsg.style.display = "block"; 
+                        targetedForm.reset();
+                    } catch (e) {
+                        console.error("Gagal mengirim", e);
+                    } finally {
+                        submitBtn.innerText = "Panggil Teknisi Sekarang →"; submitBtn.disabled = false;
                     }
-
-                    sendBtn.addEventListener('click', processAI);
-                    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') processAI(); });
-                }
+                });
             }
 
-            // Trigger init saat scroll, click, atau touchend pertama
-            ['scroll', 'click', 'touchstart'].forEach(evt => 
-                window.addEventListener(evt, initInteractiveFeatures, { once: true, passive: true })
-            );
+            // Suara AI (Voice)
+            const voiceSynth = window.speechSynthesis;
+            document.querySelectorAll('.jarvis-voice-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.jarvis-voice-btn').forEach(btn => btn.classList.remove('jarvis-playing'));
+                    if (voiceSynth.speaking) voiceSynth.cancel();
+                    
+                    const messagePayload = button.getAttribute('data-text');
+                    const speechUtterance = new SpeechSynthesisUtterance(messagePayload);
+                    speechUtterance.lang = 'id-ID';
+                    speechUtterance.rate = 0.88;
+                    speechUtterance.pitch = 0.82;
+                    
+                    button.classList.add('jarvis-playing');
+                    speechUtterance.onend = () => button.classList.remove('jarvis-playing');
+                    speechUtterance.onerror = () => button.classList.remove('jarvis-playing');
+                    voiceSynth.speak(speechUtterance);
+                });
+            });
+
+            // Logika Chatbot
+            const aiBtn = document.getElementById('jarvis-ai-button');
+            const chatBox = document.getElementById('jarvis-chat-box');
+            const closeBtn = document.getElementById('jarvis-close-ai');
+            const chatInput = document.getElementById('jarvis-chat-input');
+            const sendBtn = document.getElementById('jarvis-send-chat');
+            const chatHistory = document.getElementById('jarvis-chat-history');
+
+            if(aiBtn && chatBox) {
+                aiBtn.addEventListener('click', () => { chatBox.style.display = chatBox.style.display === 'none' ? 'flex' : 'none'; });
+                closeBtn.addEventListener('click', () => chatBox.style.display = 'none');
+
+                function processAI() {
+                    const userText = chatInput.value.toLowerCase();
+                    if(!userText) return;
+
+                    chatHistory.innerHTML += `<div class="jarvis-msg-user">${chatInput.value.trim()}</div>`;
+                    chatInput.value = '';
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                    
+                    const loadId = 'jarvis-load-' + Date.now();
+                    chatHistory.innerHTML += `<div id="${loadId}" class="jarvis-msg-ai jarvis-typing">AI sedang mengetik...</div>`;
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                    
+                    setTimeout(() => {
+                        document.getElementById(loadId).remove();
+                        let reply = "";
+                        
+                        if (userText.match(/harga|biaya|tarif|berapa/)) {
+                            reply = `Biaya GANSAR ROOTER dijamin transparan dan terjangkau! Harga menyesuaikan tingkat keparahan mampet atau bocor di lapangan. Konsultasi gratis via WA ya.`;
+                        }
+                        else if (userText.match(/lokasi|daerah|area|jangkauan|dimana|bali|badung|denpasar/)) {
+                            reply = `Kami menjangkau radius 40km dari Mengwi, mencakup seluruh Badung, Denpasar, Canggu, Kuta, hingga Seminyak. Tim fast response siap meluncur!`;
+                        }
+                        else if (userText.match(/proses|bongkar|cara/)) {
+                            reply = `Pengerjaan kami menggunakan metode modern tanpa bongkar keramik! Kami pakai mesin rooter spiral untuk saluran mampet, jadi lebih aman, cepat, dan bersih.`;
+                        }
+                        else if (userText.match(/pesan|booking|order|panggil|wa|hubungi/)) {
+                            reply = `Siap meluncur menembus kemacetan Bali! Langsung saja klik tombol WhatsApp hijau atau hubungi teknisi kami di 0899-5354-404.`;
+                        }
+                        else {
+                            reply = `Halo! Saya asisten AI Gansar Rooter. Butuh bantuan untuk WC mampet, kitchen sink tersumbat, sedot WC, atau deteksi pipa bocor di area Bali?`;
+                        }
+                        
+                        chatHistory.innerHTML += `<div class="jarvis-msg-ai">${reply}</div>`;
+                        chatHistory.scrollTop = chatHistory.scrollHeight;
+                    }, 800);
+                }
+
+                sendBtn.addEventListener('click', processAI);
+                chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') processAI(); });
+            }
         });
     </script>
 </body>
